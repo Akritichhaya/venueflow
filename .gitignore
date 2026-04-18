@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+
+# Env files (never commit real keys)
+.env
+.env.local
+frontend/.env
+backend/.env
+
+# Build output
+frontend/dist/
+frontend/.vite/
+
+# Firebase
+.firebase/
+
+# GCP
+*.json.bak
+service-account*.json
+
+# OS
+.DS_Store
+Thumbs.db
