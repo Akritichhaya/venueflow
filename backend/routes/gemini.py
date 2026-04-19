@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import google.generativeai as genai
 import os, json
 
+
 router = APIRouter()
 
 def get_model():
