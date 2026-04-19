@@ -16,6 +16,7 @@ export function ZonePanel({ zones, selectedZone, onSelect, loading }) {
               key={zone.zone}
               className={`zone-item zone-${zone.status} ${selectedZone?.zone === zone.zone ? 'zone-selected' : ''}`}
               onClick={() => onSelect(zone)}
+              title={`${zone.zone} is currently ${zone.density}% full with a wait time of ~${zone.wait_time} minutes. (${zone.status})`}
             >
               <div className="zone-name">{zone.zone}</div>
               <div className="zone-meta">
@@ -36,15 +37,15 @@ export function ZonePanel({ zones, selectedZone, onSelect, loading }) {
 // ── StatsBar ───────────────────────────────────────────────────────
 export function StatsBar({ stats, loading }) {
   const items = [
-    { label: 'Avg Density',    value: `${stats.avgDensity}%`, icon: '📊' },
-    { label: 'Critical Zones', value: stats.criticalZones,    icon: '🔴' },
-    { label: 'High Load',      value: stats.highZones,        icon: '🟠' },
-    { label: 'Clear Zones',    value: stats.clearZones,       icon: '🟢' },
+    { label: 'Avg Density',    value: `${stats.avgDensity}%`, icon: '📊', description: 'Average crowd congestion across all zones.' },
+    { label: 'Critical Zones', value: stats.criticalZones,    icon: '🔴', description: 'Zones critically overcrowded (above 85% capacity).' },
+    { label: 'High Load',      value: stats.highZones,        icon: '🟠', description: 'Zones with heavy foot traffic (70% - 85% capacity).' },
+    { label: 'Clear Zones',    value: stats.clearZones,       icon: '🟢', description: 'Zones with low congestion (below 40% capacity).' },
   ]
   return (
     <div className="stats-bar">
       {items.map(item => (
-        <div key={item.label} className="stat-card">
+        <div key={item.label} className="stat-card" title={item.description}>
           <span className="stat-icon">{item.icon}</span>
           <span className="stat-value">{loading ? '—' : item.value}</span>
           <span className="stat-label">{item.label}</span>
@@ -70,7 +71,7 @@ export function AlertsBanner({ alerts }) {
 // ── GeminiChat ─────────────────────────────────────────────────────
 import { useState } from 'react'
 
-export function GeminiChat({ zones, apiUrl }) {
+export function GeminiChat({ zones, apiUrl, height }) {
   const [messages, setMessages] = useState([
     { role: 'ai', text: 'Hi! I\'m VenueFlow AI. Ask me for navigation help or crowd info.' }
   ])
@@ -128,7 +129,7 @@ export function GeminiChat({ zones, apiUrl }) {
   }
 
   return (
-    <div className="gemini-chat">
+    <div className="gemini-chat" style={{ height: height ? `${height}px` : '260px' }}>
       <div className="chat-header">🤖 VenueFlow AI</div>
       <div className="chat-messages">
         {messages.map((m, i) => (

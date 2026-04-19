@@ -16,6 +16,7 @@ export default function App() {
   const [selectedZone, setSelectedZone] = useState(null)
   const [lastUpdated, setLastUpdated]   = useState(null)
   const [loading, setLoading]       = useState(true)
+  const [foodVendors, setFoodVendors] = useState([])
 
   // Subscribe to Firebase Realtime DB for live zone data
   useEffect(() => {
@@ -34,6 +35,16 @@ export default function App() {
           setZones(d.zones)
           setAlerts(d.zones.filter(z => z.density > 80))
           setLoading(false)
+        }
+      })
+      .catch(console.error)
+
+    // Fetch food vendors
+    fetch(`${API}/food/vendors`)
+      .then(r => r.json())
+      .then(d => {
+        if (d.vendors) {
+          setFoodVendors(d.vendors)
         }
       })
       .catch(console.error)
@@ -72,8 +83,48 @@ export default function App() {
     clearZones:    zones.filter(z => z.status === 'low').length,
   }
 
+  const [panelWidth, setPanelWidth] = useState(340)
+  const [chatHeight, setChatHeight] = useState(260)
+  const [isResizingX, setIsResizingX] = useState(false)
+  const [isResizingY, setIsResizingY] = useState(false)
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (isResizingX) {
+        const newWidth = document.body.clientWidth - e.clientX
+        setPanelWidth(Math.max(200, Math.min(newWidth, 600)))
+      }
+      if (isResizingY) {
+        // Chat is at the bottom. The top of the chat is being dragged.
+        // We can calculate height based on distance from the bottom.
+        const newHeight = document.body.clientHeight - e.clientY
+        // Provide some sensible min/max heights
+        setChatHeight(Math.max(150, Math.min(newHeight, document.body.clientHeight - 200)))
+      }
+    }
+
+    const handleMouseUp = () => {
+      setIsResizingX(false)
+      setIsResizingY(false)
+    }
+
+    if (isResizingX || isResizingY) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+      document.body.style.userSelect = 'none'
+    } else {
+      document.body.style.userSelect = ''
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      document.body.style.userSelect = ''
+    }
+  }, [isResizingX, isResizingY])
+
   return (
-    <div className="app">
+    <div className={`app ${isResizingX ? 'resizing-x' : ''} ${isResizingY ? 'resizing-y' : ''}`}>
       {/* Header */}
       <header className="header">
         <div className="logo">
@@ -101,15 +152,18 @@ export default function App() {
       <StatsBar stats={stats} loading={loading} />
 
       {/* Main Grid */}
-      <main className="main-grid">
+      <main className="main-grid" style={{ gridTemplateColumns: `1fr auto ${panelWidth}px` }}>
         {/* Map */}
         <section className="map-section">
           <MapView
             zones={zones}
+            foodVendors={foodVendors}
             selectedZone={selectedZone}
             onZoneSelect={setSelectedZone}
           />
         </section>
+
+        <div className="resizer-x" onMouseDown={() => setIsResizingX(true)} />
 
         {/* Right Panel */}
         <aside className="right-panel">
@@ -119,7 +173,8 @@ export default function App() {
             onSelect={setSelectedZone}
             loading={loading}
           />
-          <GeminiChat zones={zones} apiUrl={API} />
+          <div className="resizer-y" onMouseDown={() => setIsResizingY(true)} />
+          <GeminiChat zones={zones} apiUrl={API} height={chatHeight} />
         </aside>
       </main>
 

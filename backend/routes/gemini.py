@@ -5,8 +5,13 @@ import os, json
 
 router = APIRouter()
 
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY", ""))
-model = genai.GenerativeModel("gemini-1.5-flash")
+def get_model():
+    api_key = os.environ.get("GEMINI_API_KEY", "")
+    print(f"Using Gemini key: {api_key[:20]}...")
+    genai.configure(api_key=api_key)
+    return genai.GenerativeModel("gemini-2.5-flash-lite")
+
+model = get_model()
 
 class NavigationQuery(BaseModel):
     user_location: str
@@ -42,7 +47,7 @@ Give them:
 
 Be concise, friendly, and specific. Use bullet points. Max 150 words."""
 
-        response = model.generate_content(prompt)
+        response = await model.generate_content_async(prompt)
         return {
             "advice": response.text,
             "from": query.user_location,
@@ -75,7 +80,7 @@ Provide:
 
 Keep it operational and brief. Max 200 words."""
 
-        response = model.generate_content(prompt)
+        response = await model.generate_content_async(prompt)
         return {
             "analysis": response.text,
             "avg_density": round(avg_density, 1),
@@ -98,7 +103,7 @@ Fan question: {user_msg}
 
 Answer helpfully and concisely. If about navigation or crowds, give practical advice. Max 100 words."""
 
-        response = model.generate_content(prompt)
+        response = await model.generate_content_async(prompt)
         return {"reply": response.text}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
