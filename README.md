@@ -1,34 +1,41 @@
 # VenueFlow 🏟️
 ### Real-Time Crowd Navigation & Management System for Large Sporting Venues
 
-> Built for **PromptWars: Build with AI** — Vertical: **Crowd Movement & Navigation**
+> Built for **PromptWars: Build with AI** — Google Antigravity Hackathon
+> **Vertical: Crowd Movement & Navigation**
 
-[![Live Demo](https://img.shields.io/badge/Live-Firebase_Hosting-orange)](https://your-project.web.app)
-[![Backend](https://img.shields.io/badge/API-Cloud_Run-blue)](https://your-backend.run.app)
-
----
-
-## 🎯 Chosen Vertical
-**Crowd Movement & Navigation** — Helping fans and venue staff navigate large sporting events safely and efficiently using real-time crowd intelligence and AI-powered routing.
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-Firebase_Hosting-orange)](https://silica-491904.web.app)
+[![Backend](https://img.shields.io/badge/⚙️_API-Cloud_Run-blue)](https://venueflow-backend-950349362495.us-central1.run.app)
+[![GitHub](https://img.shields.io/badge/GitHub-VenueFlow-green)](https://github.com/Akritichhaya/venueflow)
 
 ---
 
-## 🧠 Problem Statement
+## 🎯 What is VenueFlow?
+
+VenueFlow is a smart crowd navigation dashboard that helps fans and staff navigate large sporting venues safely using **real-time crowd intelligence** and **AI-powered routing**.
+
+### 🔴 The Problem
 Large sporting venues (50,000–100,000 capacity) face:
-- **Dangerous crowd density** at entry/exit gates during peak hours
-- **Long unpredictable wait times** at concourses and concession stands
-- **Poor fan experience** due to lack of real-time navigation information
-- **Staff coordination gaps** — no unified view of crowd pressure across zones
+- Dangerous crowd density at entry/exit gates during peak hours
+- Long unpredictable wait times at concourses and concession stands
+- Poor fan experience due to lack of real-time navigation information
+- Staff coordination gaps — no unified view of crowd pressure across zones
+
+### 💡 The Solution
+VenueFlow provides:
+1. **Live crowd monitoring** across all venue zones
+2. **Google Maps heatmap** showing hotspots in real-time
+3. **Gemini AI chat** for intelligent route suggestions
+4. **Instant alerts** when zones exceed safe capacity
+5. **Google Sheets logging** for post-event analytics
 
 ---
 
-## 💡 Solution: VenueFlow
-A real-time dashboard + AI assistant that:
-1. **Monitors** crowd density across all venue zones via live sensor data
-2. **Visualizes** hotspots using a Google Maps heatmap overlay
-3. **Alerts** staff instantly when any zone exceeds safe capacity (>80%)
-4. **Routes** fans intelligently using Gemini AI, avoiding congested areas
-5. **Logs** all crowd events to Google Sheets for post-event analytics
+## 🚀 Live Demo
+
+👉 **https://silica-491904.web.app**
+
+![VenueFlow Dashboard](https://i.imgur.com/placeholder.png)
 
 ---
 
@@ -36,205 +43,99 @@ A real-time dashboard + AI assistant that:
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│                  Firebase Hosting                    │
-│              React + Vite Frontend                   │
-│  ┌──────────┐  ┌──────────┐  ┌───────────────────┐  │
-│  │ Map View │  │  Zone    │  │   Gemini AI Chat  │  │
-│  │ Heatmap  │  │  Panel   │  │   (Navigation)    │  │
-│  └──────────┘  └──────────┘  └───────────────────┘  │
+│              Firebase Hosting (Frontend)              │
+│         React + Vite + Google Maps + Gemini AI        │
 └────────────────────┬────────────────────────────────┘
                      │ REST API
 ┌────────────────────▼────────────────────────────────┐
-│              Cloud Run (FastAPI Backend)              │
-│  ┌──────────┐  ┌──────────┐  ┌───────────────────┐  │
-│  │  /crowd  │  │ /gemini  │  │    /sheets        │  │
-│  │  routes  │  │  routes  │  │    routes         │  │
-│  └────┬─────┘  └────┬─────┘  └────────┬──────────┘  │
-└───────┼─────────────┼─────────────────┼─────────────┘
-        │             │                 │
-   ┌────▼────┐  ┌─────▼──────┐  ┌──────▼──────┐
-   │Firebase │  │ Gemini 1.5 │  │   Google    │
-   │Realtime │  │   Flash    │  │   Sheets    │
-   │   DB    │  │    API     │  │    API      │
-   └─────────┘  └────────────┘  └─────────────┘
+│           Cloud Run (FastAPI Backend)                 │
+│     /crowd    │    /gemini    │    /sheets            │
+└───────┬───────────────┬───────────────┬─────────────┘
+        │               │               │
+   ┌────▼────┐  ┌───────▼──────┐  ┌────▼────────┐
+   │Firebase │  │ Gemini 2.5   │  │   Google    │
+   │Realtime │  │  Flash Lite  │  │   Sheets    │
+   │   DB    │  │     API      │  │    API      │
+   └─────────┘  └──────────────┘  └─────────────┘
 ```
 
 ---
 
 ## 🔧 Tech Stack
 
-| Layer       | Technology                          |
-|-------------|-------------------------------------|
-| Frontend    | React 18 + Vite                     |
-| Styling     | Custom CSS (DM Mono + Syne fonts)   |
-| Maps        | Google Maps JS API + Heatmap Layer  |
-| Realtime DB | Firebase Realtime Database          |
-| AI          | Google Gemini 1.5 Flash             |
-| Analytics   | Google Sheets API v4                |
-| Backend     | Python FastAPI                      |
-| Deployment  | Cloud Run + Firebase Hosting        |
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18 + Vite |
+| Maps | Google Maps JS API + Heatmap Layer |
+| AI | Google Gemini 2.5 Flash Lite |
+| Realtime DB | Firebase Realtime Database |
+| Analytics | Google Sheets API v4 |
+| Backend | Python FastAPI |
+| Deployment | Cloud Run + Firebase Hosting |
 
 ---
 
-## 🚀 How It Works
+## ✨ Features
 
-### 1. Live Crowd Monitoring
-- Zone density data (0–100%) is written to **Firebase Realtime Database** by IoT sensors or staff tablets
-- The React frontend **subscribes** to Firebase in real-time — no polling needed
-- Dashboard updates instantly as conditions change
-
-### 2. Google Maps Heatmap
-- All zone coordinates are rendered as a **weighted heatmap** on a satellite map
-- Color gradient: Green (safe) → Yellow (moderate) → Orange (busy) → Red (critical)
-- Clicking a zone marker shows density, wait time, and status
-
-### 3. Gemini AI Navigation
-- Fans type natural-language queries: *"How do I get from Gate A to the Food Court?"*
-- Gemini 1.5 Flash receives current zone densities and returns the **least-congested route**
-- Also provides alternate routes and practical tips
-- Every 60 seconds, Gemini analyzes the full crowd snapshot and surfaces operational insights for staff
-
-### 4. Google Sheets Logging
-- Every crowd update and alert is appended to a Google Sheet
-- Two tabs: `CrowdLogs` (time-series density) and `Alerts` (overcrowding events)
-- Enables post-event analysis, capacity planning, and compliance reporting
+- 🗺️ **Live Satellite Map** with crowd density heatmap
+- 🔴 **Real-time Alerts** for overcrowded zones (>80% capacity)
+- 📊 **Stats Dashboard** — avg density, critical zones, wait times
+- 🤖 **Gemini AI Chat** — ask for navigation help in natural language
+- 📋 **12 Zone Monitoring** — gates, stands, concourses, parking
+- 📈 **Google Sheets Logging** — automatic crowd analytics
+- ↔️ **Resizable Panels** — drag to resize map and chat
 
 ---
 
-## 📁 Project Structure
-
-```
-venueflow/
-├── frontend/                  # React + Vite
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── MapView.jsx    # Google Maps + heatmap
-│   │   │   ├── ZonePanel.jsx  # Live zone list
-│   │   │   ├── StatsBar.jsx   # Key metrics
-│   │   │   ├── GeminiChat.jsx # AI navigation chat
-│   │   │   └── AlertsBanner.jsx
-│   │   ├── firebase.js        # Firebase SDK setup
-│   │   ├── App.jsx            # Main layout + data orchestration
-│   │   └── App.css            # Dark dashboard styles
-│   ├── .env.example
-│   └── package.json
-├── backend/                   # FastAPI (Python)
-│   ├── routes/
-│   │   ├── crowd.py           # Firebase zone CRUD
-│   │   ├── gemini.py          # Gemini AI endpoints
-│   │   └── sheets.py          # Google Sheets logging
-│   ├── main.py
-│   ├── requirements.txt
-│   └── Dockerfile
-├── firebase.json              # Firebase Hosting + Cloud Run rewrite
-├── deploy.sh                  # One-command GCP deploy
-└── README.md
-```
-
----
-
-## ⚙️ Setup & Local Development
-
-### Prerequisites
-- Node.js 18+
-- Python 3.11+
-- Google Cloud project with billing enabled
-- Firebase project (Realtime Database enabled)
-
-### 1. Clone & configure
+## ⚙️ Setup & Run Locally
 
 ```bash
-git clone https://github.com/your-username/venueflow.git
+# Clone
+git clone https://github.com/Akritichhaya/venueflow.git
 cd venueflow
-```
 
-### 2. Backend
-
-```bash
+# Backend
 cd backend
 cp .env.example .env
-# Fill in your API keys in .env
+# Fill in your API keys
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8080
-```
 
-### 3. Frontend
-
-```bash
+# Frontend (new terminal)
 cd frontend
 cp .env.example .env
-# Fill in Firebase + Maps keys
+# Fill in your API keys
 npm install
 npm run dev
 ```
 
 ---
 
-## 🌐 Deployment (GCP)
+## 🌐 Deployment
 
-```bash
-# Set your environment variables first
-export GEMINI_API_KEY="..."
-export FIREBASE_SERVICE_ACCOUNT='{"type":"service_account",...}'
-export FIREBASE_DB_URL="https://your-project-rtdb.firebaseio.com"
-export GOOGLE_SERVICE_ACCOUNT='{"type":"service_account",...}'
-export SHEETS_SPREADSHEET_ID="..."
-
-# Deploy everything
-chmod +x deploy.sh
-./deploy.sh your-gcp-project-id
-```
-
-This will:
-1. Enable all required GCP APIs
-2. Build and push the backend Docker image to Container Registry
-3. Deploy backend to **Cloud Run** (auto-scaling, serverless)
-4. Build the React frontend
-5. Deploy frontend to **Firebase Hosting** (global CDN)
+Deployed on **Google Cloud Platform**:
+- **Frontend** → Firebase Hosting: https://silica-491904.web.app
+- **Backend** → Cloud Run: https://venueflow-backend-950349362495.us-central1.run.app
 
 ---
 
-## 🔑 Environment Variables
-
-### Backend
-| Variable | Description |
-|----------|-------------|
-| `GEMINI_API_KEY` | Google AI Studio API key |
-| `FIREBASE_SERVICE_ACCOUNT` | Firebase Admin SDK JSON (stringified) |
-| `FIREBASE_DB_URL` | Firebase Realtime DB URL |
-| `GOOGLE_SERVICE_ACCOUNT` | GCP service account JSON (stringified) |
-| `SHEETS_SPREADSHEET_ID` | Target Google Sheets ID |
-
-### Frontend (VITE_ prefix)
-| Variable | Description |
-|----------|-------------|
-| `VITE_MAPS_API_KEY` | Google Maps JavaScript API key |
-| `VITE_FIREBASE_*` | Firebase web app config values |
-| `VITE_API_URL` | Backend Cloud Run URL |
-
----
-
-## 📊 Evaluation Criteria — How VenueFlow Addresses Each
+## 📊 Evaluation Criteria
 
 | Criteria | Implementation |
 |----------|---------------|
-| **Code Quality** | Modular FastAPI routes, reusable React components, typed Pydantic models |
-| **Security** | Env vars for all secrets, CORS configured, no keys in source code |
-| **Efficiency** | Firebase real-time subscriptions (no polling), Cloud Run scales to zero, Gemini called only on demand |
-| **Testing** | Mock data fallback if Firebase offline, graceful error handling on all API calls |
-| **Accessibility** | Semantic HTML, color + icon dual encoding for status (not color-only) |
-| **Google Services** | Maps API, Gemini AI, Firebase Realtime DB, Google Sheets — all meaningfully integrated |
-
----
-
-## 🧩 Assumptions
-
-- Venue zones have fixed GPS coordinates (pre-mapped by venue ops team)
-- Density data (0–100%) is written by IoT sensors or staff devices to Firebase
-- The app targets both **fan-facing** (chat navigation) and **staff-facing** (dashboard) use cases
-- Google Sheets logging is for operational analytics, not real-time display
+| **Code Quality** | Modular FastAPI routes, reusable React components |
+| **Security** | Env vars for all secrets, no keys in source code |
+| **Efficiency** | Firebase real-time subscriptions, Cloud Run auto-scaling |
+| **Testing** | Mock data fallback, graceful error handling |
+| **Accessibility** | Color + icon dual encoding, semantic HTML |
+| **Google Services** | Maps, Gemini AI, Firebase, Sheets — all integrated |
 
 ---
 
 ## 👤 Author
-Built for PromptWars: Build with AI — Google Antigravity Hackathon
+
+**Akriti Chhaya**
+Built for PromptWars: Build with AI — Google Antigravity Hackathon 2026
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue)](https://linkedin.com)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-black)](https://github.com/Akritichhaya)
