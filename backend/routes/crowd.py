@@ -1,8 +1,10 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 import firebase_admin
 from firebase_admin import credentials, db
-import os, json, random, time
+import os, json, random, time, logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -27,6 +29,18 @@ class CrowdUpdate(BaseModel):
     lat: float
     lng: float
 
+    @validator("density")
+    def density_range(cls, v):
+        if not 0 <= v <= 100:
+            raise ValueError("density must be between 0 and 100")
+        return v
+
+    @validator("wait_time")
+    def wait_time_positive(cls, v):
+        if v < 0:
+            raise ValueError("wait_time must be >= 0")
+        return v
+
 class RouteRequest(BaseModel):
     from_zone: str
     to_zone: str
@@ -49,7 +63,7 @@ def get_all_zones():
         return {"zones": list(mock.values()), "source": "mock", "note": str(e)}
 
 @router.post("/update")
-def update_zone(update: CrowdUpdate):
+async def update_zone(update: CrowdUpdate):
     """Push a crowd density update to Firebase (called by IoT sensors / staff)."""
     try:
         ref = db.reference(f"/zones/{update.zone.replace(' ', '_')}")
@@ -59,8 +73,10 @@ def update_zone(update: CrowdUpdate):
             "updated_at": int(time.time())
         }
         ref.set(payload)
+        logger.info("Zone %s updated: density=%d status=%s", update.zone, update.density, payload["status"])
         return {"success": True, "zone": update.zone}
     except Exception as e:
+        logger.error("Failed to update zone %s: %s", update.zone, e)
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/heatmap")
